@@ -1,0 +1,25 @@
+services:
+  rabbit:
+    image: rabbitmq:latest
+  celery:
+    build: ./
+    command: celery -A proj worker -l info
+    volumes:
+      - $PWD/src:/usr/src/app/
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=asdjlskad878798asd76sd7asd987sd8a
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - rabbit
+  celery-beat:
+    build: ./
+    command: celery -A proj beat -l info
+    volumes:
+      - $PWD/src:/usr/src/app/
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=asdjlskad878798asd76sd7asd987sd8a
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - rabbit
